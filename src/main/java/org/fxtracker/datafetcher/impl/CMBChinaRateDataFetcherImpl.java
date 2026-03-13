@@ -10,12 +10,14 @@ import org.fxtracker.domain.Rate;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Component
 public class CMBChinaRateDataFetcherImpl implements RateDataFetcher {
 
     private static final String CMB_CHINA_GET_RATE_ENDPOINT = "https://m.cmbchina.com/api/rate/fx-rate";
@@ -38,7 +40,7 @@ public class CMBChinaRateDataFetcherImpl implements RateDataFetcher {
                 .retrieve()
                 .body(BeeResponseEntity.class);
 
-        if (response == null || response.returnCode.equals("SUC0000")) {
+        if (response == null || !response.returnCode.equals("SUC0000")) {
             throw new RateDataFetcherException("Failed to fetch rate from CMB");
         }
 
